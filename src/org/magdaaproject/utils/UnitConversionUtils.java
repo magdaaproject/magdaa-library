@@ -91,7 +91,7 @@ public class UnitConversionUtils {
 				throw new IllegalArgumentException("the toScale is invalid");
 			}
 		default:
-			throw new IllegalArgumentException("the fromScale was not recognised");
+			throw new IllegalArgumentException("the fromScale is invalid");
 		}
 	}
 	
