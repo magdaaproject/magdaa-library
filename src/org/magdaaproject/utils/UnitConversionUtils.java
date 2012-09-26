@@ -95,29 +95,27 @@ public class UnitConversionUtils {
 		}
 	}
 	
-	
-	//TODO implement these methods
 	private static float convertFromCelsiusToFahrenheit(float value) {
-		throw new java.lang.UnsupportedOperationException("Method Not Implemented");
+		return value * 9/5 + 32;
 	}
 	
 	private static float convertFromCelsiusToKelvin(float value) {
-		throw new java.lang.UnsupportedOperationException("Method Not Implemented");
+		return value + 273.15f;
 	}
 	
 	private static float convertFromFahrenheitToCelsius(float value) {
-		throw new java.lang.UnsupportedOperationException("Method Not Implemented");
+		return (value - 32) * 5/9;
 	}
 	
-	private static float convertFromFahrenheitToKelvin(float value) {
-		throw new java.lang.UnsupportedOperationException("Method Not Implemented");
+	private static float convertFromFahrenheitToKelvin(float value) {		
+		return convertFromCelsiusToKelvin(convertFromFahrenheitToCelsius(value));
 	}
 	
 	private static float convertFromKelvinToCelsius(float value) {
-		throw new java.lang.UnsupportedOperationException("Method Not Implemented");
+		return value - 273.15f;
 	}
 	
 	private static float convertFromKelvinToFahrenheit(float value) {
-		throw new java.lang.UnsupportedOperationException("Method Not Implemented");
+		return convertFromCelsiusToFahrenheit(convertFromKelvinToCelsius(value));
 	}
 }
