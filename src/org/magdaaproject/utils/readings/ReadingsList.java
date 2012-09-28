@@ -19,7 +19,10 @@
  */
 package org.magdaaproject.utils.readings;
 
+import java.io.IOException;
 import java.util.LinkedList;
+
+import org.magdaaproject.utils.FileUtils;
 
 /**
  * a list of sensor readings that automatically restricts the number
@@ -91,7 +94,7 @@ public class ReadingsList extends LinkedList<SensorReading> {
 		SensorReading mReading;
 		
 		// loop through all of the objects
-		for(int i = 0; i < size(); i++) {
+		for(int i = 0; i < this.size(); i++) {
 			
 			// get the next object in the list
 			mReading = this.get(i);
@@ -101,5 +104,28 @@ public class ReadingsList extends LinkedList<SensorReading> {
 				i--;
 			}	
 		}
+	}
+	
+	/**
+	 * dump the data contained in this list to a file
+	 * 
+	 * @param directory the directory used to store the file
+	 * @return the full path of the file containing the data
+	 * @throws IOException if something bad happens
+	 */
+	public String dumpData(String directory) throws IOException {
+		
+		// loop through all of the objects building the contents of the file
+		StringBuilder mBuilder = new StringBuilder();
+		SensorReading mReading;
+		
+		for(int i = 0; i < this.size(); i++) {
+			mReading = this.get(i);
+			
+			mBuilder.append(mReading.toString() + "\n");
+		}
+		
+		// save the output to a temporary file
+		return FileUtils.writeTempFile(mBuilder.toString(), directory);
 	}
 }
