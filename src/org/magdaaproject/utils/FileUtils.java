@@ -121,4 +121,56 @@ public class FileUtils {
 			throw new IOException("unable to get canonical path", e);
 		}
 	}
+	
+	/**
+	 * write a file with the specified content using the supplied name in the required directory
+	 * 
+	 * @param contents the contents of the file
+	 * @param fileName the name of the new file
+	 * @param directory the name of the directory
+	 * @return the full path to the new file 
+	 * @throws IOException if something bad happens
+	 */
+	public static String writeNewFile(String contents, String fileName, String directory) throws IOException {
+		
+		// check to see if the supplied path is writeable
+		if(isDirectoryWriteable(directory) == false) {
+			throw new IOException("unable to access specified path '" + directory + "'");
+		}
+		
+		if(TextUtils.isEmpty(contents)) {
+			throw new IllegalArgumentException("the contents of the file is required");
+		}
+		
+		if(TextUtils.isEmpty(fileName)) {
+			throw new IllegalArgumentException("the name of the file is required");
+		}
+		
+		// create the new temporary file
+		if(directory.endsWith(File.separator) == false) {
+			directory += File.separator;
+		}
+		
+		File mFile = new File(directory + fileName);
+		
+		// open the file
+		PrintWriter mWriter = null;
+		try {
+			mWriter = new PrintWriter(new FileWriter(mFile));
+		} catch (IOException e) {
+			throw new IOException("unable to open file", e);
+		}
+		
+		// write the supplied contents
+		mWriter.write(contents);
+		
+		// close the file
+		mWriter.close();
+		
+		try {
+			return mFile.getCanonicalPath();
+		} catch (IOException e) {
+			throw new IOException("unable to get canonical path", e);
+		}
+	}
 }
