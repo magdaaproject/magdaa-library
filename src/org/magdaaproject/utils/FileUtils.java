@@ -96,7 +96,7 @@ public class FileUtils {
 		// create the new temporary file
 		File mFile = null;
 		try {
-			mFile = File.createTempFile("magdaa", "txt", new File(directory));
+			mFile = File.createTempFile("magdaa", ".txt", new File(directory));
 		} catch (IOException e) {
 			throw new IOException("unable to create temp file", e);
 		}
