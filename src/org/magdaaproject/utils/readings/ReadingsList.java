@@ -37,7 +37,7 @@ public class ReadingsList extends LinkedList<SensorReading> {
 	/**
 	 * default item limit for a readings list
 	 */
-	public static final int DEFAULT_LIMIT = 10;
+	public static final int DEFAULT_LIMIT = 20;
 
 	/*
 	 * private class level constants
