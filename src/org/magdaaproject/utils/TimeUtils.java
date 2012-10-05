@@ -33,7 +33,7 @@ public class TimeUtils {
 	 */
 	public static String formatTime(long time) {
 		
-		SimpleDateFormat mFormat = new SimpleDateFormat("HH:mm:ss a");
+		SimpleDateFormat mFormat = new SimpleDateFormat("h:mm:ss a");
 
 		return mFormat.format(time);
 		
@@ -59,7 +59,7 @@ public class TimeUtils {
 	 */
 	public static String formatLongDate(long time) {
 		
-		SimpleDateFormat mFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss a z");
+		SimpleDateFormat mFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss z");
 
 		return mFormat.format(time);
 		
