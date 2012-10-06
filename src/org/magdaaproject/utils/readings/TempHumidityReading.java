@@ -86,14 +86,18 @@ public class TempHumidityReading extends SensorReading implements Comparable<Tem
 		
 		StringBuilder mBuilder = new StringBuilder();
 		
-		mBuilder.append("timestamp: ");
-		mBuilder.append(this.getTimestamp() + ",");
+//		mBuilder.append("timestamp: ");
+//		mBuilder.append(this.getTimestamp() + ",");
+//		
+//		mBuilder.append("temperature: ");
+//		mBuilder.append(temp + "¼C,");
+//		
+//		mBuilder.append("relative humidity: ");
+//		mBuilder.append(humidity + "%");
 		
-		mBuilder.append("temperature: ");
-		mBuilder.append(temp + "¼C,");
-		
-		mBuilder.append("relative humidity: ");
-		mBuilder.append(humidity + "%");
+		mBuilder.append(this.getTimestamp() + "\t");
+		mBuilder.append(temp + "\t");
+		mBuilder.append(humidity + "\t");
 		
 		return mBuilder.toString();
 	}
