@@ -24,6 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import android.os.Environment;
 import android.text.TextUtils;
 
 /**
@@ -172,5 +173,15 @@ public class FileUtils {
 		} catch (IOException e) {
 			throw new IOException("unable to get canonical path", e);
 		}
+	}
+	
+	/**
+	 * check to see if external storage is available
+	 * 
+	 * @return true if external storage is available
+	 */
+	public static boolean isExternalStorageAvailable() {
+		String mStorageState = Environment.getExternalStorageState();
+		return Environment.MEDIA_MOUNTED.equals(mStorageState);
 	}
 }
