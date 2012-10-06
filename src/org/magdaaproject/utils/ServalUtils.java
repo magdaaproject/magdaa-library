@@ -41,7 +41,7 @@ public class ServalUtils {
 	 * @param context a context object used to gain access to system resources
 	 * @return true if the Serval Mesh software is installed
 	 */
-	public boolean isServalMeshInstalled(Context context) {
+	public static boolean isServalMeshInstalled(Context context) {
 		
 		try {
 			context.getPackageManager().getApplicationInfo(SERVAL_MESH_PACKAGE_NAME, PackageManager.GET_META_DATA);
