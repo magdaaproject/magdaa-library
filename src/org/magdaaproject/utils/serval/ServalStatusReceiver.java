@@ -48,6 +48,11 @@ public class ServalStatusReceiver extends BroadcastReceiver {
 	 */
 	public static final String[] SERVAL_STATUS_ACTIONS = {"org.servalproject.ACTION_STATE_CHECK_UPDATE","org.servalproject.ACTION_STATE"};
 	
+	/**
+	 * intent action used to poll for the status of the serval mesh
+	 */
+	public static final String SERVAL_STATE_CHECK_ACTION = "org.servalproject.ACTION_STATE_CHECK";
+	
 	/*
 	 * private class level variables
 	 */
