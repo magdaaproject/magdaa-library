@@ -19,6 +19,8 @@
  */
 package org.magdaaproject.utils;
 
+import java.text.SimpleDateFormat;
+
 /**
  * a utility class which exposes methods to format data for use with 
  * the Open Data Kit suite of applications
@@ -59,5 +61,21 @@ public class OpenDataKitUtils {
 		
 		// return the string
 		return mBuilder.toString();		
+	}
+	
+	/**
+	 * using a timestamp generate a string which can be used in directory and file names for ODK Collect
+	 * 
+	 * @param timestamp the timestamp to convert
+	 * 
+	 * @return a formatted string
+	 */
+	public static String getInstanceFileName(long timestamp) {
+		
+		/*
+		 * use the same format string as that used by ODK collect
+		 */
+		SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+		return mFormat.format(timestamp);
 	}
 }
