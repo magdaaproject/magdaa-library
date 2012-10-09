@@ -20,9 +20,15 @@
 package org.magdaaproject.utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.util.zip.GZIPOutputStream;
 
 import android.os.Environment;
 import android.text.TextUtils;
@@ -139,6 +145,7 @@ public class FileUtils {
 			throw new IOException("unable to access specified path '" + directory + "'");
 		}
 		
+		// check the other parameters
 		if(TextUtils.isEmpty(contents)) {
 			throw new IllegalArgumentException("the contents of the file is required");
 		}
@@ -147,7 +154,7 @@ public class FileUtils {
 			throw new IllegalArgumentException("the name of the file is required");
 		}
 		
-		// create the new temporary file
+		// create the new  file
 		if(directory.endsWith(File.separator) == false) {
 			directory += File.separator;
 		}
@@ -183,5 +190,65 @@ public class FileUtils {
 	public static boolean isExternalStorageAvailable() {
 		String mStorageState = Environment.getExternalStorageState();
 		return Environment.MEDIA_MOUNTED.equals(mStorageState);
+	}
+	
+	/**
+	 * write a file with the specified content using the supplied name in the required directory
+	 * compressing the file using the gzip algorithm
+	 * 
+	 * @param contents the contents of the file
+	 * @param fileName the name of the new file, excluding the .gz extension
+	 * @param directory the name of the directory
+	 * @return the full path to the new file 
+	 * @throws IOException if something bad happens
+	 */
+	public static String writeNewGzipFile(String contents, String fileName, String directory) throws IOException {
+		
+		// check to see if the supplied path is writeable
+		if(isDirectoryWriteable(directory) == false) {
+			throw new IOException("unable to access specified path '" + directory + "'");
+		}
+		
+		// check the other parameters
+		if(TextUtils.isEmpty(contents)) {
+			throw new IllegalArgumentException("the contents of the file is required");
+		}
+		
+		if(TextUtils.isEmpty(fileName)) {
+			throw new IllegalArgumentException("the name of the file is required");
+		}
+		
+		// create the new  file
+		if(directory.endsWith(File.separator) == false) {
+			directory += File.separator;
+		}
+		
+		File mFile = new File(directory + fileName + ".gz");
+		
+		// open the file and write its contents
+		FileOutputStream mOutput = null;
+		Writer mWriter = null;
+		try {
+			mOutput = new FileOutputStream(mFile);
+			
+			mWriter = new OutputStreamWriter(new GZIPOutputStream(mOutput), "UTF-8");
+			
+			mWriter.write(contents);
+			
+			mWriter.close();
+			
+		} catch (FileNotFoundException e) {
+			throw new IOException("unable to open the file for writing", e);
+		} catch (UnsupportedEncodingException e) {
+			throw new IOException("unable to encode the file using 'UTF-8'", e);
+		} catch (IOException e) {
+			throw new IOException("unable to write data to the file", e);
+		}
+		
+		try {
+			return mFile.getCanonicalPath();
+		} catch (IOException e) {
+			throw new IOException("unable to get canonical path", e);
+		}
 	}
 }
