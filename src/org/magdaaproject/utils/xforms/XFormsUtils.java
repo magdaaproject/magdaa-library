@@ -20,6 +20,7 @@
 package org.magdaaproject.utils.xforms;
 
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -153,5 +154,16 @@ public class XFormsUtils {
 		} catch (javax.xml.transform.TransformerException e) {
 			throw new XFormsException("unable to transform the xml into a string", e);
 		}
+	}
+	
+	/**
+	 * format a timestamp in the ISO 8601 format for 
+	 * use in an XForms instance XML file
+	 * @param timestamp the timestamp to format
+	 * @return a formatted string
+	 */
+	public static String formatTimestamp(long timestamp) {
+		SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSZ");
+        return mSimpleDateFormat.format(timestamp);
 	}
 }
