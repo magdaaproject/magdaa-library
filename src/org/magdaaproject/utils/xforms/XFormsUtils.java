@@ -137,8 +137,12 @@ public class XFormsUtils {
 			// set some options on the transformer
 			transformer.setOutputProperty(OutputKeys.ENCODING, "utf-8");
 			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			
+			// output formatted XML if required
+			if(debugOutput) {
+				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+				transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			}
 
 			// get a transformer and supporting classes
 			stringWriter = new StringWriter();
