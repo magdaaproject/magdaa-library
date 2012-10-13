@@ -26,6 +26,10 @@ import java.text.SimpleDateFormat;
  */
 public class TimeUtils {
 	
+	public static String DEFAULT_TIME_FORMAT = "h:mm:ss a";
+	public static String DEFAULT_SHORT_DATE_FORMAT = "dd/MM/yyyy";
+	public static String DEFAULT_LONG_DATE_FORMAT = "dd/MM/yyyy HH:mm:ss z";
+	
 	/**
 	 * format a time into the format used by all MaGDAA software
 	 * @param time the time in milliseconds to format
@@ -33,7 +37,7 @@ public class TimeUtils {
 	 */
 	public static String formatTime(long time) {
 		
-		SimpleDateFormat mFormat = new SimpleDateFormat("h:mm:ss a");
+		SimpleDateFormat mFormat = new SimpleDateFormat(DEFAULT_TIME_FORMAT);
 
 		return mFormat.format(time);
 		
@@ -46,7 +50,7 @@ public class TimeUtils {
 	 */
 	public static String formatDate(long date) {
 		
-		SimpleDateFormat mFormat = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat mFormat = new SimpleDateFormat(DEFAULT_SHORT_DATE_FORMAT);
 
 		return mFormat.format(date);
 		
@@ -59,7 +63,7 @@ public class TimeUtils {
 	 */
 	public static String formatLongDate(long time) {
 		
-		SimpleDateFormat mFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss z");
+		SimpleDateFormat mFormat = new SimpleDateFormat(DEFAULT_LONG_DATE_FORMAT);
 
 		return mFormat.format(time);
 		
