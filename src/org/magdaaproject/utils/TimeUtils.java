@@ -26,9 +26,40 @@ import java.text.SimpleDateFormat;
  */
 public class TimeUtils {
 	
+	/**
+	 * format string used to format time in the short format
+	 */
+	public static String DEFAULT_SHORT_TIME_FORMAT = "HH:mm";
+	
+	/**
+	 * format string used to format time in the default format
+	 */
 	public static String DEFAULT_TIME_FORMAT = "h:mm:ss a";
+	
+	/**
+	 * format string for the short date format
+	 */
 	public static String DEFAULT_SHORT_DATE_FORMAT = "dd/MM/yyyy";
+	
+	/**
+	 * format string for the long date format
+	 */
 	public static String DEFAULT_LONG_DATE_FORMAT = "dd/MM/yyyy HH:mm:ss z";
+	
+
+	/**
+	 * format the provided date / time using the supplied format
+	 * 
+	 * @param dateTime the number of milliseconds since the epoch
+	 * @param format the format string to use
+	 * @return the formatted dateTime
+	 */
+	public static String formatDateTime(long dateTime, String format) {
+		
+		SimpleDateFormat mFormat = new SimpleDateFormat(format);
+		
+		return mFormat.format(dateTime);
+	}
 	
 	/**
 	 * format a time into the format used by all MaGDAA software
@@ -36,11 +67,7 @@ public class TimeUtils {
 	 * @return a formated time string
 	 */
 	public static String formatTime(long time) {
-		
-		SimpleDateFormat mFormat = new SimpleDateFormat(DEFAULT_TIME_FORMAT);
-
-		return mFormat.format(time);
-		
+		return formatDateTime(time, DEFAULT_TIME_FORMAT);
 	}
 	
 	/**
@@ -49,24 +76,16 @@ public class TimeUtils {
 	 * @return a formated date string
 	 */
 	public static String formatDate(long date) {
-		
-		SimpleDateFormat mFormat = new SimpleDateFormat(DEFAULT_SHORT_DATE_FORMAT);
-
-		return mFormat.format(date);
-		
+		return formatDateTime(date, DEFAULT_SHORT_DATE_FORMAT);
 	}
 	
 	/**
 	 * format a date and time into the format used by all MaGDAA software
-	 * @param time the date and time in milliseconds to format
+	 * @param dateTime the date and time in milliseconds to format
 	 * @return a formated date and time string
 	 */
-	public static String formatLongDate(long time) {
-		
-		SimpleDateFormat mFormat = new SimpleDateFormat(DEFAULT_LONG_DATE_FORMAT);
-
-		return mFormat.format(time);
-		
+	public static String formatLongDate(long dateTime) {
+		return formatDateTime(dateTime, DEFAULT_LONG_DATE_FORMAT);
 	}
 
 }
