@@ -29,22 +29,27 @@ public class TimeUtils {
 	/**
 	 * format string used to format time in the short format
 	 */
-	public static String DEFAULT_SHORT_TIME_FORMAT = "HH:mm";
+	public static final String DEFAULT_SHORT_TIME_FORMAT = "HH:mm";
 	
 	/**
 	 * format string used to format time in the default format
 	 */
-	public static String DEFAULT_TIME_FORMAT = "h:mm:ss a";
+	public static final String DEFAULT_TIME_FORMAT = "h:mm:ss a";
 	
 	/**
 	 * format string for the short date format
 	 */
-	public static String DEFAULT_SHORT_DATE_FORMAT = "dd/MM/yyyy";
+	public static final String DEFAULT_SHORT_DATE_FORMAT = "dd/MM/yyyy";
 	
 	/**
 	 * format string for the long date format
 	 */
-	public static String DEFAULT_LONG_DATE_FORMAT = "dd/MM/yyyy HH:mm:ss z";
+	public static final String DEFAULT_LONG_DATE_FORMAT = "dd/MM/yyyy HH:mm:ss z";
+	
+	/**
+	 * a constant representing one hour in milliseconds
+	 */
+	public static final long ONE_HOUR_IN_MILLISECONDS = 3600000;
 	
 
 	/**
