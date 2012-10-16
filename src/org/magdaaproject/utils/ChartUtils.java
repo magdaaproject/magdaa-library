@@ -41,6 +41,15 @@ import com.androidplot.xy.XYPlot;
  */
 public class ChartUtils {
 	
+	/*
+	 * public class level constants
+	 */
+	
+	/**
+	 * the default divisor to use when using time and date as range labels
+	 */
+	public static final long DEFAULT_DIVISOR = 1000;
+	
 	/**
 	 * format the supplied chart using the standard MaGDAA style
 	 * @param chart an initialised chart to format
