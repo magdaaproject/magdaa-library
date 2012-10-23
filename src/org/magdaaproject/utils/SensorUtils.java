@@ -115,4 +115,26 @@ public class SensorUtils {
 		
 		return newHumidity;
 	}
+	
+	/**
+	 * convert a byte array into its hex string representation
+	 * @param bytes an array of bytes
+	 * @return the byte array as a string of hex digits
+	 */
+	/*
+	 * function taken from here:
+	 * http://stackoverflow.com/a/9855338
+	 * and considered to be in the public domain
+	 */
+	public static String byteArrayToHexString(byte[] bytes) {
+	    final char[] hexArray = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+	    char[] hexChars = new char[bytes.length * 2];
+	    int v;
+	    for ( int j = 0; j < bytes.length; j++ ) {
+	        v = bytes[j] & 0xFF;
+	        hexChars[j * 2] = hexArray[v >>> 4];
+	        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+	    }
+	    return new String(hexChars);
+	}
 }
