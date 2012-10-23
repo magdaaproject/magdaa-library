@@ -26,6 +26,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.zip.GZIPOutputStream;
@@ -37,6 +38,11 @@ import android.text.TextUtils;
  * a utility class which exposes utility methods for interacting with files and the filesystem
  */
 public class FileUtils {
+	
+	/**
+	 * Maximum file size that the {@link #readFile(String) readFile} method will process
+	 */
+	public static final int MAX_READ_FILE_SIZE = 1024;
 	
 	/**
 	 * check to see if a directory is writeable if it exists, if it doesn't exist this method
@@ -112,15 +118,17 @@ public class FileUtils {
 		PrintWriter mWriter = null;
 		try {
 			mWriter = new PrintWriter(new FileWriter(mFile));
-		} catch (IOException e) {
+			
+			// write the supplied contents
+			mWriter.write(contents);
+			
+			// close the file
+			mWriter.close();
+		} catch (FileNotFoundException e) {
 			throw new IOException("unable to open temp file", e);
+		} catch (IOException e) {
+			throw new IOException("unable to write temporary file", e);
 		}
-		
-		// write the supplied contents
-		mWriter.write(contents);
-		
-		// close the file
-		mWriter.close();
 		
 		try {
 			return mFile.getCanonicalPath();
@@ -165,15 +173,17 @@ public class FileUtils {
 		PrintWriter mWriter = null;
 		try {
 			mWriter = new PrintWriter(new FileWriter(mFile));
+			
+			// write the supplied contents
+			mWriter.write(contents);
+			
+			// close the file
+			mWriter.close();
+		} catch (FileNotFoundException e) {
+			throw new IOException("unable to open temp file", e);
 		} catch (IOException e) {
-			throw new IOException("unable to open file", e);
+			throw new IOException("unable to write temporary file", e);
 		}
-		
-		// write the supplied contents
-		mWriter.write(contents);
-		
-		// close the file
-		mWriter.close();
 		
 		try {
 			return mFile.getCanonicalPath();
@@ -250,5 +260,91 @@ public class FileUtils {
 		} catch (IOException e) {
 			throw new IOException("unable to get canonical path", e);
 		}
+	}
+	
+	/**
+	 * write a temporary file into the specified directory with the supplied contents
+	 * 
+	 * @param contents the contents of the file
+	 * @param directory the path of the directory to contain the file
+	 * @return the full path to the new file 
+	 * @throws IOException if something bad happens
+	 */
+	public static String writeTempFile(byte[] contents, String directory) throws IOException {
+		
+		// check to see if the supplied path is writeable
+		if(isDirectoryWriteable(directory) == false) {
+			throw new IOException("unable to access specified path '" + directory + "'");
+		}
+		
+		if(contents.length == 0) {
+			throw new IllegalArgumentException("the contents of the file is required");
+		}
+		
+		// create the new temporary file
+		File mFile = null;
+		try {
+			mFile = File.createTempFile("magdaa-", ".txt", new File(directory));
+		} catch (IOException e) {
+			throw new IOException("unable to create temp file", e);
+		}
+		
+		// open the file
+		FileOutputStream mWriter;
+		try {
+			mWriter = new FileOutputStream(mFile);
+			
+			// write the supplied contents
+			mWriter.write(contents);
+			
+			// close the file
+			mWriter.close();
+		} catch (FileNotFoundException e) {
+			throw new IOException("unable to open temp file", e);
+		} catch (IOException e) {
+			throw new IOException("unable to write temporary file", e);
+		}
+		
+		try {
+			return mFile.getCanonicalPath();
+		} catch (IOException e) {
+			throw new IOException("unable to get canonical path", e);
+		}
+	}
+	
+	/**
+	 * read a file and return the contents as a byte array
+	 * @param path the path to the file to read
+	 * @return the contents of the file as a byte array
+	 * @throws IOException if something bad happens or the file size is greater than {@link #MAX_READ_FILE_SIZE MAX_READ_FILE_SIZE}
+	 */
+	public static byte[] readFile(String path) throws IOException {
+		
+		if(isFileReadable(path) == false) {
+			throw new IOException("unable to find the specified file");
+		}
+		
+		// read the file
+		try {
+			RandomAccessFile mFile = new RandomAccessFile(path, "r"); // only read the file
+			
+			// check on the size of the file
+			if(mFile.length() <= MAX_READ_FILE_SIZE) {
+			
+				byte[] mBytes = new byte[(int) mFile.length()];
+				
+				mFile.read(mBytes);
+				
+				mFile.close();
+				
+				return mBytes;
+			} else {
+				throw new IOException("the file size exceeds '" + MAX_READ_FILE_SIZE + "' bytes and will not be read");
+			}
+		} catch (FileNotFoundException e) {
+			throw new IOException("unable to open the file", e);
+		} catch (IOException e) {
+			throw new IOException("unable to read from the file", e);
+		} 
 	}
 }
