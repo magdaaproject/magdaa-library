@@ -1,4 +1,3 @@
-<!-- 
 /*
  * Copyright (C) 2012 The MaGDAA Project
  *
@@ -18,23 +17,30 @@
  * along with this source code; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
--->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.magdaaproject.utils"
-    android:versionCode="1"
-    android:versionName="1.0">
+package org.magdaaproject.utils;
 
-    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="10" />
-    
-    <!-- uses permissions -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- write files on external storage -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/> <!-- derive the device id -->
-    <uses-permission android:name="org.servalproject.rhizome.ADD_FILE"/> <!-- add files to the Rhizome store for sharing -->
+/**
+ * an exception that may be thrown when manipulating sensor data
+ */
+public class SensorUtilsException extends Exception {
 
-    <application android:label="@string/magdaa_lib_app_name"
-        android:icon="@drawable/ic_launcher"
-        android:theme="@style/AppTheme">
+	private static final long serialVersionUID = -7384264021802666501L;
+	
+	public SensorUtilsException() {
+		super();
+	}
+	
+	public SensorUtilsException(String message) {
+		super(message);
+	}
+	
+	public SensorUtilsException(String message, Throwable cause) {
+		super(message, cause);
+	}
+	
+	public SensorUtilsException(Throwable cause) {
+		super(cause);
+	}
+	
 
-    </application>
-
-</manifest>
+}

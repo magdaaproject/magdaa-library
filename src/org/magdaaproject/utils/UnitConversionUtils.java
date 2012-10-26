@@ -40,13 +40,33 @@ public class UnitConversionUtils {
 	 */
 	public static final int KELVIN = 2;
 	
+	/**
+	 * constant to define the kilometers per hour speed scale
+	 */
+	public static final int KPH = 10; 
+	
+	/**
+	 * constant to define the miles per hour speed scale
+	 */
+	public static final int MPH = 11;
+	
+	/**
+	 * constant to define the hPa barometric scale
+	 */
+	public static final int HPA = 20;
+	
+	/**
+	 * constant to define the hg inch barometric scale
+	 */
+	public static final int HG_INCH = 21;
+	
 	
 	/**
 	 * convert a temperature value from one scale to another
 	 * 
 	 * @param value the temperature
-	 * @param fromScale the scale to convert from
-	 * @param toScale the scale to convert to
+	 * @param fromScale the scale to convert from, as defined by one of the temperature related constants in this class
+	 * @param toScale the scale to convert to , as defined by one of the temperature related constants in this class
 	 * @return the converted temperature
 	 * @throws IllegalArgumentException of the fromScale or toScale parameters are invalid
 	 */
@@ -117,5 +137,87 @@ public class UnitConversionUtils {
 	
 	private static float convertFromKelvinToFahrenheit(float value) {
 		return convertFromCelsiusToFahrenheit(convertFromKelvinToCelsius(value));
+	}
+	
+	/**
+	 * convert a speed measurement from one scale to another
+	 * @param speed the speed measurement to convert
+	 * @param fromScale the from scale, as defined by one of the speed related constants in this class
+	 * @param toScale the to scale, as defined by one of the speed related constants in this class
+	 * @return the converted speed measurement
+	 * @throws IllegalArgumentException if an invalid scale is provided
+	 */
+	public static float convertSpeed(float speed, int fromScale, int toScale) {
+		switch(fromScale) {
+		case KPH:
+			// convert from kilometers per hour
+			switch(toScale) {
+			case MPH:
+				return convertFromKphToMph(speed);
+			default: 
+				throw new IllegalArgumentException("invalid toScale");
+			}
+		case MPH:
+			// convert from miles per hour
+			switch(toScale) {
+			case KPH:
+				return convertFromMphToKph(speed);
+			default:
+				throw new IllegalArgumentException("invalid toScale");
+			}
+		default:
+			throw new IllegalArgumentException("invalid fromScale");
+		}
+	}
+	
+	private static float convertFromMphToKph(float mph) {
+		float conversionFactor = 1.609344f;
+		return mph * conversionFactor;
+	}
+	
+	private static float convertFromKphToMph(float kph) {
+		float conversionFactor = 1.609344f;
+		return kph / conversionFactor;
+	}
+	
+	/**
+	 * convert from one unit of pressure to another
+	 * @param pressure the pressure reading to convert
+	 * @param fromScale the from scale, as defined by one of the pressure related constants in this class
+	 * @param toScale the to scale, as defined by one of the pressure related constants in this class
+	 * @return the converted pressure measurement
+	 * @throws IllegalArgumentException if an invalid scale is provided
+	 */
+	public static float convertBarometer(float pressure, int fromScale, int toScale) {
+		switch(fromScale) {
+		case HPA:
+			// convert from hPa
+			switch(toScale) {
+			case HG_INCH:
+				return convertFromHpaToHgInch(pressure);
+			default:
+				throw new IllegalArgumentException("invalid toScale");
+			}
+		case HG_INCH:
+			// convert from hg inches
+			switch(toScale) {
+			case HPA:
+				return convertFromHgInchToHpa(pressure);
+			default:
+				throw new IllegalArgumentException("invalid toScale");
+			}
+		default:
+			throw new IllegalArgumentException("invalid fromScale");
+		}
+	}
+	
+	private static float convertFromHgInchToHpa(float hgInch) {
+		float conversionFactor = 33.8638866667f;
+		return hgInch * conversionFactor;
+	}
+	
+	private static float convertFromHpaToHgInch(float hpa) {
+		float conversionFactor = 33.8638866667f;
+		return hpa / conversionFactor;
 	}
 }

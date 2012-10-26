@@ -20,5 +20,32 @@
  */
 -->
 <resources>
-    <string name="app_name">MaGDAA Library</string>
+    <string name="magdaa_lib_app_name">MaGDAA Library</string>
+    
+    <!-- barometric trend strings -->
+    <string name="magdaa_lib_sensor_barometric_trend_no_data">Insufficient Data</string>
+    <string name="magdaa_lib_sensor_barometric_trend_falling_rapidly">Falling Rapidly</string>
+    <string name="magdaa_lib_sensor_barometric_trend_falling_slowly">Falling Slowly</string>
+    <string name="magdaa_lib_sensor_barometric_trend_steady">Steady</string>
+    <string name="magdaa_lib_sensor_barometric_trend_rising_slowly">Rising Slowly</string>
+    <string name="magdaa_lib_sensor_barometric_trend_rising_rapidly">Rising Rapidly</string>
+    
+    <!-- wind direction strings -->
+    <string name="magdaa_lib_wind_direction_no_data">No Wind</string>
+    <string name="magdaa_lib_wind_direction_nne">NNE</string>
+    <string name="magdaa_lib_wind_direction_ne">NE</string>
+    <string name="magdaa_lib_wind_direction_ene">ENE</string>
+    <string name="magdaa_lib_wind_direction_e">E</string>
+    <string name="magdaa_lib_wind_direction_ese">ESE</string>
+    <string name="magdaa_lib_wind_direction_se">SE</string>
+    <string name="magdaa_lib_wind_direction_sse">SSE</string>
+    <string name="magdaa_lib_wind_direction_s">S</string>
+    <string name="magdaa_lib_wind_direction_ssw">SSW</string>
+    <string name="magdaa_lib_wind_direction_sw">SW</string>
+    <string name="magdaa_lib_wind_direction_wsw">WSW</string>
+    <string name="magdaa_lib_wind_direction_w">W</string>
+    <string name="magdaa_lib_wind_direction_wnw">WNW</string>
+    <string name="magdaa_lib_wind_direction_nw">NW</string>
+    <string name="magdaa_lib_wind_direction_nnw">NNW</string>
+    <string name="magdaa_lib_wind_direction_n">N</string>
 </resources>
