@@ -99,6 +99,14 @@ public class SensorUtils {
 		return mRelativeHumidity;
 	}
 	
+	/**
+	 * adjust the relative humidity to take into account the current temperature
+	 * 
+	 * @param relativeHumidity the relative humidity
+	 * @param temperature the current temperature
+	 * @param sensorType the type of sensor used, one of the constants define by this class
+	 * @return
+	 */
 	public static float adjustRelativeHumidity(float relativeHumidity, float temperature, int sensorType) {
 		
 		float newHumidity;
