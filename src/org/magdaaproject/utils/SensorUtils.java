@@ -305,7 +305,7 @@ public class SensorUtils {
 		// barometer
 		mShortValue = getShortFromBytes(bytes[7], bytes[8]);
 		mWeatherReading.setBarometer(
-				UnitConversionUtils.convertBarometer(
+				UnitConversionUtils.convertBarometricPressure(
 						(float) mShortValue / 1000, 
 						UnitConversionUtils.HG_INCH, 
 						UnitConversionUtils.HPA

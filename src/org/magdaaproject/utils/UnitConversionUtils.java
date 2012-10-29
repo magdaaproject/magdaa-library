@@ -60,6 +60,16 @@ public class UnitConversionUtils {
 	 */
 	public static final int HG_INCH = 21;
 	
+	/**
+	 * constant to define the millimetre scale
+	 */
+	public static final int MILLIMETRE = 30;
+	
+	/**
+	 * constant to define the inch scale
+	 */
+	public static final int INCH = 31;
+	
 	
 	/**
 	 * convert a temperature value from one scale to another
@@ -181,14 +191,14 @@ public class UnitConversionUtils {
 	}
 	
 	/**
-	 * convert from one unit of pressure to another
+	 * convert from one unit of barometric pressure to another
 	 * @param pressure the pressure reading to convert
 	 * @param fromScale the from scale, as defined by one of the pressure related constants in this class
 	 * @param toScale the to scale, as defined by one of the pressure related constants in this class
 	 * @return the converted pressure measurement
 	 * @throws IllegalArgumentException if an invalid scale is provided
 	 */
-	public static float convertBarometer(float pressure, int fromScale, int toScale) {
+	public static float convertBarometricPressure(float pressure, int fromScale, int toScale) {
 		switch(fromScale) {
 		case HPA:
 			// convert from hPa
@@ -219,5 +229,46 @@ public class UnitConversionUtils {
 	private static float convertFromHpaToHgInch(float hpa) {
 		float conversionFactor = 33.8638866667f;
 		return hpa / conversionFactor;
+	}
+	
+	/**
+	 * convert from one unit of length to another
+	 * @param length the length reading to convert
+	 * @param fromScale the from scale, as define by one of the length related constants in this class
+	 * @param toScale the to scale, as defined by one of the length related constants in this class
+	 * @return the converted length measurement
+	 * @throws IllegalArgumentException if an invalid scale is provided
+	 * @return
+	 */
+	public static float convertLength(float length, int fromScale, int toScale) {
+		switch(fromScale){
+		case MILLIMETRE:
+			// convert from millimetre
+			switch(toScale) {
+			case INCH:
+				return convertFromMillimetreToInch(length);
+			default:
+				throw new IllegalArgumentException("invalid to scale");
+			}
+		case INCH:
+			// convert from inch
+			switch(toScale) {
+			case MILLIMETRE:
+				return convertFromInchToMillimetre(length);
+			default:
+				throw new IllegalArgumentException("invalid to scale");
+			}
+		default:
+			throw new IllegalArgumentException("invalid from scale");
+		}
+	}
+	
+	private static float convertFromMillimetreToInch(float length) {
+		return length * 0.0393700787f;
+		
+	}
+	
+	private static float convertFromInchToMillimetre(float length) {
+		return length * 25.4f;
 	}
 }
