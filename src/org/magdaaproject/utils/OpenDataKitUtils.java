@@ -21,11 +21,25 @@ package org.magdaaproject.utils;
 
 import java.text.SimpleDateFormat;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+
 /**
  * a utility class which exposes methods to format data for use with 
  * the Open Data Kit suite of applications
  */
 public class OpenDataKitUtils {
+	
+	/*
+	 * public class level constants
+	 */
+	
+	/**
+	 * identify the package name of the Serval Mesh software
+	 */
+	public static final String ODK_COLLECT_PACKAGE_NAME = "org.odk.collect.android";
+	
 	
 	/**
 	 * build a location string in the style used by Open Data Kit XForm instances
@@ -77,5 +91,20 @@ public class OpenDataKitUtils {
 		 */
 		SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 		return mFormat.format(timestamp);
+	}
+	
+	/**
+	 * check to see if the ODK Collect package is installed
+	 * @param context a context object used to gain access to system resources
+	 * @return true if the ODK Collect software is installed
+	 */
+	public static boolean isOdkCollectInstalled(Context context) {
+		try {
+			context.getPackageManager().getApplicationInfo(ODK_COLLECT_PACKAGE_NAME, PackageManager.GET_META_DATA);
+		} catch (NameNotFoundException e) {
+			return false;
+		}
+
+		return true;
 	}
 }
