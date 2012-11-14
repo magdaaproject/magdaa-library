@@ -19,17 +19,23 @@
  */
 package org.magdaaproject.utils;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.Scanner;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import android.os.Environment;
 import android.text.TextUtils;
@@ -43,6 +49,11 @@ public class FileUtils {
 	 * Maximum file size that the {@link #readFile(String) readFile} method will process
 	 */
 	public static final int MAX_READ_FILE_SIZE = 1024;
+	
+	/**
+	 * the default name of the index file in a MaGDAA Bundle used by the {@link #getMagdaaBundleIndex(String)} method
+	 */
+	public static final String MAGDAA_BUNDLE_INDEX_FILE_NAME = "_index.txt";
 	
 	/**
 	 * check to see if a directory is writeable if it exists, if it doesn't exist this method
@@ -346,5 +357,140 @@ public class FileUtils {
 		} catch (IOException e) {
 			throw new IOException("unable to read from the file", e);
 		} 
+	}
+	
+	/**
+	 * extract the contents of a zip file to a specified path
+	 * 
+	 * @param zipFile the path to the zip file
+	 * @param outputPath the path where to output the zip file
+	 * @throws IOException if something bad happens
+	 */
+	public static void extractFromZipFile(String zipFile, String outputPath) throws IOException {
+		
+		// method implementation based on code here: http://stackoverflow.com/a/10997886
+		// which is considered to be in the public domain
+		
+		// double check the parameters
+		if(TextUtils.isEmpty(zipFile) == true || TextUtils.isEmpty(outputPath) == true) {
+			throw new IllegalArgumentException("both parameters to this method is required");
+		}
+		
+		if(isFileReadable(zipFile) == false) {
+			throw new IOException("unable to access the specified file");
+		}
+		
+		if(isDirectoryWriteable(outputPath) == false) {
+			throw new IOException("unable to access the specified output directory");
+		}
+		
+		if(outputPath.endsWith(File.separator) == false) {
+			outputPath += File.separator;
+		}
+
+		// declare helper variables
+		String mFileName;
+		InputStream mInputStream = null;
+		ZipInputStream mZipInputStream = null;
+		ZipEntry mZipEntry;
+		byte[] mBuffer = new byte[1024];
+		int mByteCount;
+		
+		try {
+			// open the file
+			mInputStream = new BufferedInputStream(new FileInputStream(zipFile));
+			mZipInputStream = new ZipInputStream(new BufferedInputStream(mInputStream));
+			
+			// extract all of the files
+			while((mZipEntry = mZipInputStream.getNextEntry()) != null) {
+				
+				// create the new output path
+				mFileName = mZipEntry.getName();
+				
+				// open the file
+				FileOutputStream mOutputStream = new FileOutputStream(outputPath + mFileName);
+				
+				// write the data to the new file
+				while((mByteCount = mZipInputStream.read(mBuffer)) != 1) {
+					//write the uncompressed data to the file
+					mOutputStream.write(mBuffer, 0, mByteCount);
+				}
+				
+				// close the output file
+				mOutputStream.close();
+				
+				// close this zip entry
+				mZipInputStream.closeEntry();	
+			}
+		} catch (FileNotFoundException e) {
+			throw new IOException("unable to open specified zip file", e);
+		} catch (IOException e) {
+			throw new IOException("unable to extract a file", e);
+		} finally {
+			if(mZipInputStream != null) {
+				mZipInputStream.close();
+			}
+		}
+	}
+	
+	/**
+	 * extract the bundle index file from a MaGDAA Bundle file
+	 * @param bundleFile the path to the bundle file
+	 * @return the contents of the index file or null if no index file was found
+	 * @throws IOException if something bad happens
+	 */
+	public String getMagdaaBundleIndex(String bundleFile) throws IOException {
+		
+		// double check the parameters
+		if(TextUtils.isEmpty(bundleFile) == true) {
+			throw new IllegalArgumentException("the path to the input file is required");
+		}
+		
+		if(isFileReadable(bundleFile) == false) {
+			throw new IOException("unable to access the specified file");
+		}
+		
+		// declare helper variables
+		String mFileName;
+		InputStream mInputStream = null;
+		ZipInputStream mZipInputStream = null;
+		ZipEntry mZipEntry;
+		String mFileContents = null;
+		
+		try {
+			// open the file
+			mInputStream = new BufferedInputStream(new FileInputStream(bundleFile));
+			mZipInputStream = new ZipInputStream(new BufferedInputStream(mInputStream));
+			
+			// extract all of the files
+			while((mZipEntry = mZipInputStream.getNextEntry()) != null) {
+				
+				// create the new output path
+				mFileName = mZipEntry.getName();
+				
+				// check the name of the file
+				if(mFileName.equals(MAGDAA_BUNDLE_INDEX_FILE_NAME) == true) {
+					
+					// read in the data 
+					// based on method here: http://stackoverflow.com/a/5445161 
+					// which is considered to be in the public domain
+					Scanner mScanner = new Scanner(mZipInputStream, "UTF-8").useDelimiter("\\A");
+					mFileContents = mScanner.next();
+				}
+				
+				// close this zip entry
+				mZipInputStream.closeEntry();	
+			}
+		} catch (FileNotFoundException e) {
+			throw new IOException("unable to open specified zip file", e);
+		} catch (IOException e) {
+			throw new IOException("unable to extract a file", e);
+		} finally {
+			if(mZipInputStream != null) {
+				mZipInputStream.close();
+			}
+		}
+		
+		return mFileContents;
 	}
 }
