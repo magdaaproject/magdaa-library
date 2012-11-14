@@ -476,6 +476,9 @@ public class FileUtils {
 					// which is considered to be in the public domain
 					Scanner mScanner = new Scanner(mZipInputStream, "UTF-8").useDelimiter("\\A");
 					mFileContents = mScanner.next();
+					
+					// exit the loop early
+					break;
 				}
 				
 				// close this zip entry
