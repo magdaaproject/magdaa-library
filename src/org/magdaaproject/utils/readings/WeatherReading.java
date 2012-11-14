@@ -192,7 +192,7 @@ public class WeatherReading extends SensorReading implements Comparable<WeatherR
 
 	/**
 	 * set the direction of the wind
-	 * @param weatherDirection the weatherDirection to set
+	 * @param windDirection the weatherDirection to set
 	 */
 	public void setWindDirection(int windDirection) {
 		

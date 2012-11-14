@@ -238,7 +238,7 @@ public class UnitConversionUtils {
 	 * @param toScale the to scale, as defined by one of the length related constants in this class
 	 * @return the converted length measurement
 	 * @throws IllegalArgumentException if an invalid scale is provided
-	 * @return
+	 * @return the length in the to measurement scale
 	 */
 	public static float convertLength(float length, int fromScale, int toScale) {
 		switch(fromScale){
