@@ -21,6 +21,7 @@ package org.magdaaproject.utils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -32,6 +33,8 @@ import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -439,7 +442,7 @@ public class FileUtils {
 	 * @return the contents of the index file or null if no index file was found
 	 * @throws IOException if something bad happens
 	 */
-	public String getMagdaaBundleIndex(String bundleFile) throws IOException {
+	public static String getMagdaaBundleIndex(String bundleFile) throws IOException {
 		
 		// double check the parameters
 		if(TextUtils.isEmpty(bundleFile) == true) {
@@ -495,5 +498,120 @@ public class FileUtils {
 		}
 		
 		return mFileContents;
+	}
+	
+	/**
+	 * get a list of files in a directory
+	 * 
+	 * @param dirPath the directory to search for files
+	 * @param extension an extension to filter the list of files, if null all files are returned
+	 * @return an array of file names or null if no files match
+	 * @throws IOException
+	 */
+	public static String[] listFilesInDir(String dirPath, String extension) throws IOException {
+		String[] mExtensions = new String[1];
+		mExtensions[0] = extension;
+		
+		return listFilesInDir(dirPath, mExtensions);
+	}
+	
+	/**
+	 * get a list of files in a directory
+	 * 
+	 * @param dirPath the directory to search for files
+	 * @param extensions a list of extensions to filter the list of files, if null all files are returns
+	 * @return an array of file names or null if no files match
+	 * @throws IOException
+	 */
+	public static String[] listFilesInDir(String dirPath, String[] extensions) throws IOException {
+
+		String[] mFileList = null;
+
+		// check the parameters
+		if(TextUtils.isEmpty(dirPath) == true) {
+			throw new IllegalArgumentException("the dirPath paramter is required");
+		}
+
+		if(isDirectoryWriteable(dirPath) == false) {
+			throw new IOException("unable to access the required directory: " + dirPath);
+		}
+
+		// get a list of files
+		File mDir = new File(dirPath);
+
+		File[] mFiles = mDir.listFiles(new ExtensionFileFilter(extensions));
+
+		if(mFiles != null && mFiles.length > 0) {
+
+			mFileList = new String[mFiles.length];
+
+			for(int i = 0; i < mFiles.length; i++) {
+				mFileList[i] = mFiles[i].getCanonicalPath();
+			}
+
+			Arrays.sort(mFileList);
+		}
+
+		return mFileList;
+	}
+
+	// file filter using extensions
+	private static class ExtensionFileFilter implements FileFilter {
+
+		private String[] extensions;
+
+		public ExtensionFileFilter(String[] extensions) {
+			this.extensions = extensions;
+		}
+
+		public boolean accept(File pathname) {
+
+			if (pathname.isDirectory()) {
+				return false;
+			}
+
+			if (pathname.canRead() == false) {
+				return false;
+			}
+
+			String name = pathname.getName().toLowerCase(Locale.US);
+
+			if(extensions == null) {
+				if(!name.equals("..") || !name.equals(".")) {
+					return true;
+				}
+			} else {
+				for(String mExtension: extensions) {
+					if(name.endsWith(mExtension)) {
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+			return false;
+		}
+	}
+
+	/**
+	 * get the extension component of a file name
+	 * 
+	 * @param fileName the name of the file
+	 * @return the extension of the file, or null
+	 */
+	public static String getExtension(String fileName) {
+
+		if(fileName == null) {
+			return null;
+		}
+
+		int mLocation =  fileName.lastIndexOf(".");
+
+		if(mLocation == -1) {
+			return null;
+		} else {
+			return fileName.substring(mLocation + 1);
+		}
 	}
 }
