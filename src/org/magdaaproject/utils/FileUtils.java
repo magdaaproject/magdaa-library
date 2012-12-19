@@ -34,10 +34,12 @@ import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import android.os.Environment;
@@ -371,7 +373,7 @@ public class FileUtils {
 	 */
 	public static void extractFromZipFile(String zipFile, String outputPath) throws IOException {
 		
-		// method implementation based on code here: http://stackoverflow.com/a/10997886
+		// method implementation based on code here: http://stackoverflow.com/a/4886495
 		// which is considered to be in the public domain
 		
 		// double check the parameters
@@ -390,55 +392,56 @@ public class FileUtils {
 		if(outputPath.endsWith(File.separator) == false) {
 			outputPath += File.separator;
 		}
-
-		// declare helper variables
-		String mFileName;
-		InputStream mInputStream = null;
-		ZipInputStream mZipInputStream = null;
+		
+		File mOutputFile;
 		ZipEntry mZipEntry;
-		byte[] mBuffer = new byte[1024];
-		int mByteCount;
-		File mNewFile;
+		InputStream mInputStream;
+		FileOutputStream mOutputStream;
+		byte[] mBuffer = new byte[4096];
+
+		// open the zip file
+		ZipFile mZipInputFile = new ZipFile(zipFile);
 		
 		try {
-			// open the file
-			mInputStream = new BufferedInputStream(new FileInputStream(zipFile));
-			mZipInputStream = new ZipInputStream(new BufferedInputStream(mInputStream));
 			
-			// extract all of the files
-			while((mZipEntry = mZipInputStream.getNextEntry()) != null) {
+			// get a list of entries in the file
+			Enumeration<? extends ZipEntry> mEntries = mZipInputFile.entries();
+			
+			// process each entry in turn
+			while (mEntries.hasMoreElements()) {
+	            
+				// get the next element
+				mZipEntry = mEntries.nextElement();
 				
-				// get the name of the file
-				mFileName = mZipEntry.getName();
+				// build the path for the output file
+				mOutputFile = new File(outputPath, mZipEntry.getName());
 				
-				// make any necessary directories
-				mFileName = outputPath + mFileName;
-				mNewFile = new File(mFileName);
-				new File(mNewFile.getParent()).mkdirs();
-				
-				// open the file
-				FileOutputStream mOutputStream = new FileOutputStream(mNewFile);
-				
-				// write the data to the new file
-				while((mByteCount = mZipInputStream.read(mBuffer)) != 1) {
-					//write the uncompressed data to the file
-					mOutputStream.write(mBuffer, 0, mByteCount);
+				// check to see if this is a directory
+				if(mZipEntry.isDirectory()) {
+					// create the necessary directories
+					mOutputFile.mkdirs();
+				} else {
+					// create the file
+					mInputStream = mZipInputFile.getInputStream(mZipEntry);
+					try {
+						mOutputStream = new FileOutputStream(mOutputFile);
+	
+						// copy the data into the file
+						try {
+						    int size;
+						    while ((size = mInputStream.read(mBuffer)) != -1) {
+						    	mOutputStream.write(mBuffer, 0, size);
+						    }
+						} finally {
+							mOutputStream.close();
+						}
+					} finally {
+						mInputStream.close();
+					}
 				}
-				
-				// close the output file
-				mOutputStream.close();
-				
-				// close this zip entry
-				mZipInputStream.closeEntry();	
 			}
-		} catch (FileNotFoundException e) {
-			throw new IOException("unable to open specified zip file", e);
-		} catch (IOException e) {
-			throw new IOException("unable to extract a file", e);
 		} finally {
-			if(mZipInputStream != null) {
-				mZipInputStream.close();
-			}
+			mZipInputFile.close();
 		}
 	}
 	
@@ -517,10 +520,10 @@ public class FileUtils {
 	public static String[] listFilesInDir(String dirPath, String extension) throws IOException {
 		String[] mExtensions = new String[1];
 		
-		if(TextUtils.isEmpty(extension) == false) {
-			mExtensions[0] = extension;
+		if(TextUtils.isEmpty(extension)) {
+			mExtensions = null;
 		} else {
-			mExtensions[0] = null;
+			mExtensions[0] = extension;
 		}
 		
 		return listFilesInDir(dirPath, mExtensions);
