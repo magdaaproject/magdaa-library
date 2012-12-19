@@ -398,6 +398,7 @@ public class FileUtils {
 		ZipEntry mZipEntry;
 		byte[] mBuffer = new byte[1024];
 		int mByteCount;
+		File mNewFile;
 		
 		try {
 			// open the file
@@ -407,11 +408,16 @@ public class FileUtils {
 			// extract all of the files
 			while((mZipEntry = mZipInputStream.getNextEntry()) != null) {
 				
-				// create the new output path
+				// get the name of the file
 				mFileName = mZipEntry.getName();
 				
+				// make any necessary directories
+				mFileName = outputPath + mFileName;
+				mNewFile = new File(mFileName);
+				new File(mNewFile.getParent()).mkdirs();
+				
 				// open the file
-				FileOutputStream mOutputStream = new FileOutputStream(outputPath + mFileName);
+				FileOutputStream mOutputStream = new FileOutputStream(mNewFile);
 				
 				// write the data to the new file
 				while((mByteCount = mZipInputStream.read(mBuffer)) != 1) {
