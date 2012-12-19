@@ -560,6 +560,49 @@ public class FileUtils {
 
 		return mFileList;
 	}
+	
+	/**
+	 * recursively delete files and folders in the given path
+	 * @param path the path to delete
+	 * @throws IOException
+	 */
+	public void recursiveDelete(String path) throws IOException {
+		recursiveDelete(new File(path));
+	}
+	
+	/**
+	 * recursively delete files and folders in the given path
+	 * @param path the path to delete
+	 * @throws IOException
+	 */
+	public void recursiveDelete(File path) throws IOException {
+		
+		// based on the code available here: http://stackoverflow.com/a/5059468
+		// and considered to be in the public domain
+		
+		if(path.isDirectory()) {
+			
+			// get a list of files and directories in this directory
+			String[] mChildPaths = path.list();
+			
+			// loop through deleting all child files and directories
+			for (int i = 0; i < mChildPaths.length; i++) {
+				File mChildPath = new File (path, mChildPaths[i]);
+				
+				if(mChildPath.isDirectory()) {
+					recursiveDelete(mChildPath);
+				}
+				else {
+					if (mChildPath.delete() == false) {
+						throw new IOException("unable to delete path" + mChildPath.getAbsolutePath());
+					}
+				}
+			}
+			
+			// delete the empty directory
+			path.delete();
+		}
+	}
 
 	// file filter using extensions
 	private static class ExtensionFileFilter implements FileFilter {
