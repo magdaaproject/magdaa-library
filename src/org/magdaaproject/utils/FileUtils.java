@@ -386,7 +386,7 @@ public class FileUtils {
 		}
 		
 		if(isDirectoryWriteable(outputPath) == false) {
-			throw new IOException("unable to access the specified output directory");
+			throw new IOException("unable to access the specified output directory '" + outputPath + "'");
 		}
 		
 		if(outputPath.endsWith(File.separator) == false) {
@@ -412,6 +412,11 @@ public class FileUtils {
 	            
 				// get the next element
 				mZipEntry = mEntries.nextElement();
+				
+				// skip the __MACOSX folder
+				if(mZipEntry.getName().contains("__MACOSX")) {
+					continue;
+				}
 				
 				// build the path for the output file
 				mOutputFile = new File(outputPath, mZipEntry.getName());
