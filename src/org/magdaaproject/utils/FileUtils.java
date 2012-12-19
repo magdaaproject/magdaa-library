@@ -510,13 +510,18 @@ public class FileUtils {
 	 * get a list of files in a directory
 	 * 
 	 * @param dirPath the directory to search for files
-	 * @param extension an extension to filter the list of files, if null all files are returned
+	 * @param extension an extension to filter the list of files, if empty all files are returned
 	 * @return an array of file names or null if no files match
 	 * @throws IOException
 	 */
 	public static String[] listFilesInDir(String dirPath, String extension) throws IOException {
 		String[] mExtensions = new String[1];
-		mExtensions[0] = extension;
+		
+		if(TextUtils.isEmpty(extension) == false) {
+			mExtensions[0] = extension;
+		} else {
+			mExtensions[0] = null;
+		}
 		
 		return listFilesInDir(dirPath, mExtensions);
 	}
