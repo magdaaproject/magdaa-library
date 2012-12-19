@@ -566,7 +566,7 @@ public class FileUtils {
 	 * @param path the path to delete
 	 * @throws IOException
 	 */
-	public void recursiveDelete(String path) throws IOException {
+	public static void recursiveDelete(String path) throws IOException {
 		recursiveDelete(new File(path));
 	}
 	
@@ -575,7 +575,7 @@ public class FileUtils {
 	 * @param path the path to delete
 	 * @throws IOException
 	 */
-	public void recursiveDelete(File path) throws IOException {
+	public static void recursiveDelete(File path) throws IOException {
 		
 		// based on the code available here: http://stackoverflow.com/a/5059468
 		// and considered to be in the public domain
