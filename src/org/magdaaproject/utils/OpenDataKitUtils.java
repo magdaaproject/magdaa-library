@@ -21,6 +21,7 @@ package org.magdaaproject.utils;
 
 import java.text.SimpleDateFormat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -29,6 +30,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
  * a utility class which exposes methods to format data for use with 
  * the Open Data Kit suite of applications
  */
+@SuppressLint("SimpleDateFormat")
 public class OpenDataKitUtils {
 	
 	/*

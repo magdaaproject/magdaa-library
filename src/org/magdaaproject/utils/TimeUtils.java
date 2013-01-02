@@ -19,11 +19,13 @@
  */
 package org.magdaaproject.utils;
 
+import android.annotation.SuppressLint;
 import java.text.SimpleDateFormat;
 
 /**
  * a utility class which exposes utility methods for manipulating and formating time
  */
+@SuppressLint("SimpleDateFormat")
 public class TimeUtils {
 	
 	/**

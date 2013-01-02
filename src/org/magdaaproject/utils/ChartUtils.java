@@ -25,6 +25,7 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.LinearGradient;
@@ -39,6 +40,7 @@ import com.androidplot.xy.XYPlot;
 /**
  * a utility class which exposes methods related to the formatting of a AndroidPlot chart
  */
+@SuppressLint("SimpleDateFormat")
 public class ChartUtils {
 	
 	/*
