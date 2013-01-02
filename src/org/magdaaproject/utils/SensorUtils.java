@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The MaGDAA Project
+ * Copyright (C) 2012, 2013 The MaGDAA Project
  *
  * This file is part of the MaGDAA Library Software
  *
@@ -17,7 +17,6 @@
  * along with this source code; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package org.magdaaproject.utils;
 
 import java.io.UnsupportedEncodingException;
