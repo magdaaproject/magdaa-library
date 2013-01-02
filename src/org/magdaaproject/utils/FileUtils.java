@@ -19,28 +19,23 @@
  */
 package org.magdaaproject.utils;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Locale;
-import java.util.Scanner;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
+
+import org.zeroturnaround.zip.NameMapper;
+import org.zeroturnaround.zip.ZipUtil;
 
 import android.os.Environment;
 import android.text.TextUtils;
@@ -373,9 +368,6 @@ public class FileUtils {
 	 */
 	public static void extractFromZipFile(String zipFile, String outputPath) throws IOException {
 		
-		// method implementation based on code here: http://stackoverflow.com/a/4886495
-		// which is considered to be in the public domain
-		
 		// double check the parameters
 		if(TextUtils.isEmpty(zipFile) == true || TextUtils.isEmpty(outputPath) == true) {
 			throw new IllegalArgumentException("both parameters to this method is required");
@@ -393,61 +385,18 @@ public class FileUtils {
 			outputPath += File.separator;
 		}
 		
-		File mOutputFile;
-		ZipEntry mZipEntry;
-		InputStream mInputStream;
-		FileOutputStream mOutputStream;
-		byte[] mBuffer = new byte[4096];
+		final String mMacOsxDir = "__MACOSX";
 
-		// open the zip file
-		ZipFile mZipInputFile = new ZipFile(zipFile);
-		
-		try {
-			
-			// get a list of entries in the file
-			Enumeration<? extends ZipEntry> mEntries = mZipInputFile.entries();
-			
-			// process each entry in turn
-			while (mEntries.hasMoreElements()) {
-	            
-				// get the next element
-				mZipEntry = mEntries.nextElement();
-				
-				// skip the __MACOSX folder
-				if(mZipEntry.getName().contains("__MACOSX")) {
-					continue;
-				}
-				
-				// build the path for the output file
-				mOutputFile = new File(outputPath, mZipEntry.getName());
-				
-				// check to see if this is a directory
-				if(mZipEntry.isDirectory()) {
-					// create the necessary directories
-					mOutputFile.mkdirs();
+		// use the ZipUtil library for ease of development
+		ZipUtil.unpack(new File(zipFile), new File(outputPath), new NameMapper() {
+			public String map(String name) {
+				if(name.contains(mMacOsxDir) == true) {
+					return null;
 				} else {
-					// create the file
-					mInputStream = mZipInputFile.getInputStream(mZipEntry);
-					try {
-						mOutputStream = new FileOutputStream(mOutputFile);
-	
-						// copy the data into the file
-						try {
-						    int size;
-						    while ((size = mInputStream.read(mBuffer)) != -1) {
-						    	mOutputStream.write(mBuffer, 0, size);
-						    }
-						} finally {
-							mOutputStream.close();
-						}
-					} finally {
-						mInputStream.close();
-					}
+					return name;
 				}
 			}
-		} finally {
-			mZipInputFile.close();
-		}
+		});
 	}
 	
 	/**
@@ -467,51 +416,16 @@ public class FileUtils {
 			throw new IOException("unable to access the specified file");
 		}
 		
-		// declare helper variables
-		String mFileName;
-		InputStream mInputStream = null;
-		ZipInputStream mZipInputStream = null;
-		ZipEntry mZipEntry;
-		String mFileContents = null;
-		
-		try {
-			// open the file
-			mInputStream = new BufferedInputStream(new FileInputStream(bundleFile));
-			mZipInputStream = new ZipInputStream(new BufferedInputStream(mInputStream));
+		if(ZipUtil.containsEntry(new File(bundleFile), MAGDAA_BUNDLE_INDEX_FILE_NAME) == true) {
 			
-			// extract all of the files
-			while((mZipEntry = mZipInputStream.getNextEntry()) != null) {
-				
-				// create the new output path
-				mFileName = mZipEntry.getName();
-				
-				// check the name of the file
-				if(mFileName.equals(MAGDAA_BUNDLE_INDEX_FILE_NAME) == true) {
-					
-					// read in the data 
-					// based on method here: http://stackoverflow.com/a/5445161 
-					// which is considered to be in the public domain
-					Scanner mScanner = new Scanner(mZipInputStream, "UTF-8").useDelimiter("\\A");
-					mFileContents = mScanner.next();
-					
-					// exit the loop early
-					break;
-				}
-				
-				// close this zip entry
-				mZipInputStream.closeEntry();	
-			}
-		} catch (FileNotFoundException e) {
-			throw new IOException("unable to open specified zip file", e);
-		} catch (IOException e) {
-			throw new IOException("unable to extract a file", e);
-		} finally {
-			if(mZipInputStream != null) {
-				mZipInputStream.close();
-			}
+			byte[] mBytes = ZipUtil.unpackEntry(new File(bundleFile), MAGDAA_BUNDLE_INDEX_FILE_NAME);
+			
+			return new String(mBytes, "UTF-8");
+			
+		} else {
+			// bundle file is missing
+			return null;
 		}
-		
-		return mFileContents;
 	}
 	
 	/**
