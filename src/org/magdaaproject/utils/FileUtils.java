@@ -78,6 +78,27 @@ public class FileUtils {
 	}
 	
 	/**
+	 * check to see if a directory is readble if it exists
+	 * 
+	 * @param path the file system path to check
+	 * @return true if the directory is readable
+	 */
+	public static boolean isDirectoryReadable(String path) {
+		
+		if(TextUtils.isEmpty(path) == true) {
+			throw new IllegalArgumentException("the path parameter is required");
+		}
+
+		File mPath = new File(path);
+
+		if(mPath.isDirectory() && mPath.canRead()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
 	 * check to see if a file exists and is readable
 	 * 
 	 * @param path the full path of a file to test
@@ -357,6 +378,31 @@ public class FileUtils {
 		} catch (IOException e) {
 			throw new IOException("unable to read from the file", e);
 		} 
+	}
+	
+	/**
+	 * create a zip file using the specified path and input file / directory
+	 * 
+	 * @param zipFile the file to the zip file to create
+	 * @param inputPath the input path, either a file or directory
+	 * @throws IOException if something bad happens
+	 */
+	public static void writeNewZipFile(String zipFile, String inputPath) throws IOException {
+
+		// double check the parameters
+		if(TextUtils.isEmpty(zipFile) == true || TextUtils.isEmpty(inputPath) == true) {
+			throw new IllegalArgumentException("both parameters to this method is required");
+		}
+		
+		if(isFileReadable(zipFile) == true) {
+			throw new IOException("output file already exists");
+		}
+		
+		if(isDirectoryReadable(inputPath) == false) {
+			throw new IOException("unable to access the specified input directory '" + inputPath + "'");
+		}
+		
+		ZipUtil.pack(new File(inputPath), new File(zipFile));
 	}
 	
 	/**
