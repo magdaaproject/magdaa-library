@@ -21,12 +21,16 @@ package org.magdaaproject.utils.serval;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.magdaaproject.utils.FileUtils;
 
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 /**
@@ -125,5 +129,27 @@ public class RhizomeUtils {
 			return false;
 		}
 	}
-
+	
+	/**
+	 * convert a Rhizome bundle into a JSON representation
+	 * 
+	 * @param bundle the bundle to convert
+	 * @return the bundle contents as JSON
+	 */
+	public static String bundleToJson(Bundle bundle) {
+		
+		JSONObject mObject = new JSONObject();
+		
+		Set<String> mBundleKeys = bundle.keySet();
+		
+		for(String mKey: mBundleKeys) {
+			try {
+				mObject.put(mKey, bundle.get(mKey).toString());
+			} catch (JSONException e) {
+				Log.e(sLogTag, "unable to add Rhizome bundle element to JSON object", e);
+			}
+		}
+		
+		return mObject.toString();
+	}
 }
