@@ -534,21 +534,33 @@ public class FileUtils {
 		return mFileList;
 	}
 	
+	
+	
 	/**
-	 * recursively delete files and folders in the given path
+	 * recursively delete files and folders below the given path
 	 * @param path the path to delete
 	 * @throws IOException
 	 */
 	public static void recursiveDelete(String path) throws IOException {
-		recursiveDelete(new File(path));
+		recursiveDelete(new File(path), false);
 	}
 	
 	/**
-	 * recursively delete files and folders in the given path
+	 * recursively delete files and folders below the given path
 	 * @param path the path to delete
 	 * @throws IOException
 	 */
 	public static void recursiveDelete(File path) throws IOException {
+		recursiveDelete(path, false);
+	}
+	
+	/**
+	 * recursively delete files and folders below the given path
+	 * @param path the path to delete
+	 * @param deleteParent if set to true the parent directory of the path will also be deleted
+	 * @throws IOException
+	 */
+	public static void recursiveDelete(File path, boolean deleteParent) throws IOException {
 		
 		// based on the code available here: http://stackoverflow.com/a/5059468
 		// and considered to be in the public domain
@@ -563,7 +575,7 @@ public class FileUtils {
 				File mChildPath = new File (path, mChildPaths[i]);
 				
 				if(mChildPath.isDirectory()) {
-					recursiveDelete(mChildPath);
+					recursiveDelete(mChildPath, deleteParent);
 				}
 				else {
 					if (mChildPath.delete() == false) {
@@ -573,7 +585,9 @@ public class FileUtils {
 			}
 			
 			// delete the empty directory
-			path.delete();
+			if(deleteParent == true) {
+				path.delete();
+			}
 		}
 	}
 
