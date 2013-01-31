@@ -62,7 +62,9 @@ import org.zeroturnaround.zip.transform.ZipEntryTransformerEntry;
 public final class ZipUtil {
 
   /** Default compression level */
-  public static final int DEFAULT_COMPRESSION_LEVEL = Deflater.DEFAULT_COMPRESSION;
+  // change to to be the best compression level
+  public static final int DEFAULT_COMPRESSION_LEVEL = Deflater.BEST_COMPRESSION;
+  //public static final int DEFAULT_COMPRESSION_LEVEL = Deflater.DEFAULT_COMPRESSION;
   
   //private static final Logger log = LoggerFactory.getLogger(ZipUtil.class);
 
